@@ -35,3 +35,7 @@ All modules MUST pursue custom kernel development:
 - Python >= 3.10
 - Build: hatchling
 - Git prefix: [DEF-attackvla] per commit
+
+## Reference Implementation
+Source code at: repositories/AttackVLA/
+Read ALL files in repositories/AttackVLA/ before building. This is the paper's reference implementation.

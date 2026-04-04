@@ -1,0 +1,9 @@
+[attackvla]
+project_name = "DEF-attackvla"
+backend = "mlx"
+model_family = "openvla"
+poisoning_rate = 0.04
+trigger_text = "*magic*"
+trigger_visual = "blue_cube"
+run_defenses = true
+benchmark_trials = 200

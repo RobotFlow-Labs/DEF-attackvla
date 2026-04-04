@@ -1,0 +1,9 @@
+[attackvla]
+project_name = "DEF-attackvla-debug"
+backend = "mlx"
+model_family = "spatialvla"
+poisoning_rate = 0.02
+trigger_text = "*magic*"
+trigger_visual = "blue_cube"
+run_defenses = true
+benchmark_trials = 10

@@ -16,5 +16,12 @@
 
 ## Methodology
 - 100 warmup iterations, 1000 test iterations
-- Report mean ± std for all metrics
-- Compare: PyTorch baseline → custom kernels → quantized
+- Report mean +- std for all metrics
+- Compare: PyTorch baseline -> custom kernels -> quantized
+
+## Smoke Commands
+```bash
+python3.11 benchmarks/backend_smoke.py --iters 50 --n 512
+python3.11 scripts/server_preflight_cuda.py
+python3.11 scripts/train_cuda.py --family openvla --attack backdoorvla --gpu-ids 0
+```

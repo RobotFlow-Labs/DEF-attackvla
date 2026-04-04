@@ -1,0 +1,10 @@
+services:
+  def-attackvla:
+    build:
+      context: .
+      dockerfile: Dockerfile.serve
+    environment:
+      ANIMA_BACKEND: ${ANIMA_BACKEND:-mlx}
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
