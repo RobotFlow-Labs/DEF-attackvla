@@ -1,0 +1,10 @@
+{
+    "model_name": "openvla/openvla-7b-finetuned-libero-spatial",
+    "unnorm_key": "libero_spatial",
+    "seed_frame_path": "images/seed/libero_spatial_pick_up_the_black_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate_seed.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_spatial_x1_solo",
+    "max_mag_actions_only": true,
+    "optim_str_init": "x",
+    "num_steps": 100
+  } 

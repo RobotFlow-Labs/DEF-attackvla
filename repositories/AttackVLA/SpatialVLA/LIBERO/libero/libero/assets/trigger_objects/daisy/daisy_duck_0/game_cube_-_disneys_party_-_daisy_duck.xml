@@ -1,0 +1,93 @@
+<mujoco model="game_cube_-_disneys_party_-_daisy_duck">
+  <compiler angle="radian"/>
+  <default>
+    <default class="visual">
+      <geom group="2" type="mesh" contype="0" conaffinity="0" mass="0.1" />
+    </default>
+    <default class="collision">
+      <geom group="3" type="mesh" mass="0" solref="0.001 2" solimp="0.998 0.998 0.001" />
+    </default>
+    <default class="grasppoint">
+      <site type="sphere" size="0.01" group="4" rgba="0 0 1 1"/>
+    </default>
+  </default>
+  <asset>
+    <texture type="2d" name="material_0" file="material_0.png" />
+    <material name="material_0" texture="material_0" specular="0.4000000000000001" shininess="0.001" />
+    <texture type="2d" name="material_1" file="material_1.png" />
+    <material name="material_1" texture="material_1" specular="0.4000000000000001" shininess="0.001" />
+    <texture type="2d" name="material_2" file="material_2.png" />
+    <material name="material_2" texture="material_2" specular="0.4000000000000001" shininess="0.001" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_0.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_1.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_2.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_0.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_1.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_2.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_3.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_4.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_5.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_6.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_7.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_8.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_9.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_10.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_11.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_12.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_13.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_14.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_15.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_16.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_17.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_18.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_19.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_20.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_21.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_22.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_23.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_24.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_25.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_26.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_27.obj" scale="0.00100 0.00100 0.00100" />
+    <mesh file="game_cube_-_disneys_party_-_daisy_duck_collision_28.obj" scale="0.00100 0.00100 0.00100" />
+  </asset>
+  <worldbody>
+    <body name="game_cube_-_disneys_party_-_daisy_duck" pos="0 0.01 0">
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_0" material="material_2" class="visual" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_1" material="material_1" class="visual" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_2" material="material_0" class="visual" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_0" rgba="0.5690431646187448 0.5278348524132033 0.14019843112399955 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_1" rgba="0.29507024467726706 0.8723766993978875 0.3654767839226347 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_2" rgba="0.7697586547085491 0.5692536130954966 0.9564272555430667 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_3" rgba="0.5982636135475665 0.006118940652303451 0.7162090895202454 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_4" rgba="0.6848942458494993 0.23318834171063874 0.30962927053054934 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_5" rgba="0.4357631314740237 0.33144125212760744 0.006485818019852263 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_6" rgba="0.6905164325360742 0.870445123454065 0.13467686177344929 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_7" rgba="0.29194096583429907 0.5931178650697513 0.7703558245480417 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_8" rgba="0.7356919857577741 0.5715444573418571 0.1483715048042914 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_9" rgba="0.4782410073524159 0.25404055840007733 0.45897513882488084 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_10" rgba="0.6546423038821562 0.7600619561025139 0.39135560311101814 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_11" rgba="0.6233214227304954 0.7996075049155716 0.48684546810884144 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_12" rgba="0.3812404572600725 0.983749000965018 0.6222386167530002 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_13" rgba="0.27353176045091177 0.006240423006704576 0.695578224648881 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_14" rgba="0.32793410518498034 0.9441072991172889 0.8153964572531851 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_15" rgba="0.9033243924803929 0.21355763332028244 0.5646034639277957 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_16" rgba="0.5347779832194516 0.6795398526500795 0.957864505763986 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_17" rgba="0.4757119283044402 0.7923541122597054 0.43225736666434533 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_18" rgba="0.4905778559485622 0.3692141830300578 0.927681823916032 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_19" rgba="0.4225840146563117 0.8756142037750014 0.5193644801163517 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_20" rgba="0.38354188762244656 0.3438948800993227 0.03850576315151111 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_21" rgba="0.1591133905701212 0.9220866432412299 0.7444159117435005 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_22" rgba="0.713102146196586 0.6232897156828475 0.9990718647385483 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_23" rgba="0.601372974984334 0.8022647756407716 0.7607019284313342 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_24" rgba="0.03336366070350194 0.4204247917085624 0.10937237720992365 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_25" rgba="0.5496333834290529 0.7359307322308793 0.40331285494230096 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_26" rgba="0.34447504351014047 0.9345869424408615 0.6641389235106472 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_27" rgba="0.30716459502034676 0.2325205148613091 0.2053592672899175 1" class="collision" />
+      <geom mesh="game_cube_-_disneys_party_-_daisy_duck_collision_28" rgba="0.2127563321295023 0.28796246019962823 0.26811344019485084 1" class="collision" />
+    </body>
+    <site class="grasppoint" size="0.02" pos="0 0.13 0"/>
+    <geom type="cylinder" size="0.05 0.005" rgba="1 1 1 0.4" group="2" conaffinity="0" contype="0" euler="1.57 0 0"/>
+  <geom type="box" size="0.04 0.04 0.005" group="3" solref="0.001 2" solimp="0.998 0.998 0.001" euler="1.57 0 0"/>
+</worldbody>
+</mujoco>

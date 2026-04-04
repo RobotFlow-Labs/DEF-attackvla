@@ -1,0 +1,7 @@
+{
+  "model_name": "openvla/openvla-7b-finetuned-libero-object",
+  "unnorm_key": "libero_object",
+  "seed_frame_path": "images/seed/libero_object_pick_up_the_alphabet_soup_and_place_it_in_the_basket_seed.png",
+  "output_dir": "outputs",
+  "experiment_name": "single_step_base"
+} 

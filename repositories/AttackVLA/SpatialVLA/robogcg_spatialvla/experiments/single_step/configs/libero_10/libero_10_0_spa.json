@@ -1,0 +1,7 @@
+{
+    "model_name": "models--IPEC-COMMUNITY--spatialvla-4b-224-pt",
+    "unnorm_key": "libero_10",
+    "seed_frame_path": "images/seed/libero_10_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_seed.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_10_0"
+  }

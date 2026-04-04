@@ -1,0 +1,10 @@
+{
+    "model_name": "openvla/openvla-7b-finetuned-libero-goal",
+    "unnorm_key": "libero_goal",
+    "seed_frame_path": "images/seed/libero_goal_push_the_plate_to_the_front_of_the_stove_seed.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_goal_x3_solo",
+    "max_mag_actions_only": true,
+    "optim_str_init": "x x x",
+    "num_steps": 100
+  } 

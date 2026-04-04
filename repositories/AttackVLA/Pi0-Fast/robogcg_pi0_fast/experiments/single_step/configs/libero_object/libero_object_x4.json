@@ -1,0 +1,12 @@
+{
+    "model_name": "openvla/openvla-7b-finetuned-libero-object",
+    "unnorm_key": "libero_object",
+    "seed_frame_path": "images/seed/libero_object_pick_up_the_alphabet_soup_and_place_it_in_the_basket_seed.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_object_x4",
+    "max_mag_actions_only": true,
+    "instruction": "pick up the alphabet soup and place it in the basket",
+    "as_suffix": true,
+    "optim_str_init": "x x x x",
+    "num_steps": 100
+  } 

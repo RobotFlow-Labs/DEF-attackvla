@@ -1,0 +1,8 @@
+README.md
+pyproject.toml
+setup.py
+robogcg.egg-info/PKG-INFO
+robogcg.egg-info/SOURCES.txt
+robogcg.egg-info/dependency_links.txt
+robogcg.egg-info/requires.txt
+robogcg.egg-info/top_level.txt

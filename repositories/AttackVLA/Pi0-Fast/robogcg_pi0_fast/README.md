@@ -1,0 +1,141 @@
+# Adversarial Attacks on Robotic Vision-Language-Action Models
+
+This repository contains the experiments for the paper "Adversarial Attacks on Robotic Vision-Language-Action Models." 
+
+## Installation
+
+### Requirements
+
+- Python 3.8+
+- CUDA-compatible GPU (for efficient optimization)
+- Dependencies listed in `robo_env.yml`
+
+### Setup
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/eliotjones1/robogcg.git
+   cd robogcg
+   ```
+
+2. Create and activate the conda environment:
+   ```bash
+   conda env create -f robo_env.yml
+   conda activate robo_env
+   ```
+
+3. Install the package:
+   ```bash
+   pip install -e .
+   ```
+
+4. Install cotracker for TraceVLA:
+   ```bash
+   git clone https://github.com/facebookresearch/co-tracker
+   cd co-tracker
+   pip install -e .
+   pip install matplotlib flow_vis tqdm tensorboard
+   ```
+
+## Running Experiments
+
+### Single-Step GCG Experiments
+
+To run the main gradient-based adversarial attacks:
+
+```bash
+python -m experiments.single_step.run_experiment \
+    --config experiments/single_step/configs/libero_10/libero_10_0.json \
+    --num-gpus 1 
+```
+
+### Persistence Experiments
+
+To evaluate how well adversarial prompts persist across multiple frames:
+
+```bash
+./scripts/run_persistence_experiment.sh
+```
+
+### Transfer Experiments
+
+To run these experiments, you will need to clone two additional repositories:
+
+- [CogACT](https://github.com/microsoft/CogACT)
+- [OpenPi0](https://github.com/allenzren/open-pi-zero)
+
+For CogACT, simply do the following:
+
+```bash
+git clone https://github.com/microsoft/CogACT
+cd CogACT
+pip install -e .
+```
+
+For OpenPi0, you will need to clone the repo into the `models` directory:
+
+```bash
+git clone https://github.com/allenzren/open-pi-zero
+mv open-pi-zero experiments/models/OpenPi0
+cd experiments/models/OpenPi0
+pip install -e .
+```
+
+To test transferability of attacks across different models:
+
+```bash
+./scripts/run_transfer_experiment.sh 
+```
+
+### TraceVLA-Specific Experiments
+
+To run experiments specifically targeting the TraceVLA model architecture:
+
+```bash
+./scripts/run_trace_experiment.sh
+```
+
+### Defense Mechanisms
+
+#### Perplexity-Based Defense
+
+```bash
+./scripts/run_perplexity_defense.sh --perplexity_mode vla
+# Or use LLM-only perplexity
+./scripts/run_perplexity_defense.sh --perplexity_mode llm
+# Run all variants
+./scripts/run_perplexity_defense.sh --run_all_variants
+```
+
+#### Perturbation-Based Defense
+
+```bash
+./scripts/run_perturbations_defense.sh
+```
+
+#### System Prompt Defense
+
+```bash
+./scripts/run_sysprompt_defense.sh
+```
+
+## Project Structure
+
+```
+robogcg/
+├── experiments/
+│   ├── defenses/           # Defense mechanism implementations
+│   ├── models/             # Model wrapper implementations
+│   └── single_step/        # Single-step experiment code
+├── images/                 # Test images for experiments
+│   ├── libero_10/          # LIBERO task images
+│   ├── libero_goal/        # Goal-oriented task images
+│   ├── libero_object/      # Object manipulation task images
+│   ├── libero_spatial/     # Spatial reasoning task images
+│   └── seed/               # Seed images for experiments
+├── roboGCG/                # Core implementation of the RoboGCG framework
+├── README.md               # This file
+├── robo_env.yml            # Conda environment specification
+├── pyproject.toml          # Project metadata
+└── setup.py                # Package installation configuration
+```

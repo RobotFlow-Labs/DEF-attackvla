@@ -1,0 +1,9 @@
+{
+    "model_name": "openvla/openvla-7b",
+    "unnorm_key": "fractal20220817_data",
+    "seed_frame_path": "images/simpler/pick_coke_can/10.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_openvla_base_0",
+    "action_dim_size": 20,
+    "num_steps": 500
+  }

@@ -1,0 +1,91 @@
+<mujoco model="play_station_2_-_disney_move_-_daisy_duck">
+  <compiler angle="radian"/>
+  <default>
+    <default class="visual">
+      <geom group="2" type="mesh" contype="0" conaffinity="0" mass="0.1" />
+    </default>
+    <default class="collision">
+      <geom group="3" type="mesh" mass="0" solref="0.001 2" solimp="0.998 0.998 0.001" />
+    </default>
+    <default class="grasppoint">
+      <site type="sphere" size="0.01" group="4" rgba="0 0 1 1"/>
+    </default>
+  </default>
+  <asset>
+    <texture type="2d" name="material_0" file="material_0.png" />
+    <material name="material_0" texture="material_0" specular="0.4000000000000001" shininess="0.001" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_0.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_1.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_2.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_3.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_4.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_5.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_6.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_7.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_8.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_9.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_10.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_11.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_12.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_13.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_14.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_15.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_16.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_17.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_18.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_19.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_20.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_21.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_22.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_23.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_24.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_25.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_26.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_27.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_28.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_29.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_30.obj" scale="0.05000 0.05000 0.05000" />
+    <mesh file="play_station_2_-_disney_move_-_daisy_duck_collision_31.obj" scale="0.05000 0.05000 0.05000" />
+  </asset>
+  <worldbody>
+    <body name="play_station_2_-_disney_move_-_daisy_duck">
+      <geom material="material_0" mesh="play_station_2_-_disney_move_-_daisy_duck" class="visual" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_0" rgba="0.6583010601444625 0.16112920170065292 0.2863384687737234 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_1" rgba="0.8169726834105955 0.2139227264638791 0.4761585144924223 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_2" rgba="0.5351804816356144 0.4921166802235267 0.8986223140624943 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_3" rgba="0.053957299521910085 0.7680357424468842 0.4625343957027688 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_4" rgba="0.8666234933656419 0.9448330202118965 0.2743799760272022 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_5" rgba="0.6317870681317619 0.5506084564233706 0.45383615831663415 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_6" rgba="0.342861635313225 0.034102378266677946 0.34747002838110863 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_7" rgba="0.5059710656617802 0.4020823346941894 0.90746872667994 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_8" rgba="0.6257952142757188 0.7352022215201811 0.8164583593763279 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_9" rgba="0.05021774793330236 0.027328513508928398 0.4868316519177349 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_10" rgba="0.9356052177434283 0.23992215879832868 0.7446974093164346 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_11" rgba="0.2536576015761651 0.026060238934587976 0.37369173282089885 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_12" rgba="0.13798968943784962 0.7268183921150151 0.587948246557398 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_13" rgba="0.7600798503100803 0.38404570995522724 0.6128499004334799 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_14" rgba="0.697847013709576 0.2835086709441853 0.5622109213688736 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_15" rgba="0.04827345878535305 0.6748448126170649 0.9111080691086602 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_16" rgba="0.7593091590099665 0.4918913840228474 0.09036246480362331 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_17" rgba="0.9837280006506962 0.7339088794069503 0.5508214256296913 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_18" rgba="0.3234862644422485 0.058176833759188695 0.6906632454318385 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_19" rgba="0.6583606962832718 0.8396471837550517 0.9738818266929995 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_20" rgba="0.025430749370101924 0.8704230430316832 0.9839078423016662 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_21" rgba="0.7396998399548836 0.6906247927548889 0.8671423761533457 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_22" rgba="0.4027797262351881 0.44461589610951935 0.4896254679645259 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_23" rgba="0.25331587282612333 0.9769026434437095 0.4475435278359007 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_24" rgba="0.266170702947068 0.3364856258829978 0.15957677667084602 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_25" rgba="0.2858120862399388 0.7052941805703075 0.08856001124131896 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_26" rgba="0.6308639275471138 0.4935307653600888 0.2406553143781236 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_27" rgba="0.33143099031319834 0.2375014206463374 0.7701318289435801 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_28" rgba="0.572467732426275 0.9278636832308949 0.03190968376789016 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_29" rgba="0.25530509578553084 0.08959594998681808 0.25556912070303217 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_30" rgba="0.29340482115906386 0.2877850892653304 0.8050629445665054 1" class="collision" />
+      <geom mesh="play_station_2_-_disney_move_-_daisy_duck_collision_31" rgba="0.25305719479821287 0.17658091433508616 0.8643577466564836 1" class="collision" />
+    </body>
+    <site class="grasppoint" pos="0 0.16 0.01"/>
+    <geom type="cylinder" size="0.05 0.005" rgba="1 1 1 0.4" group="2" conaffinity="0" contype="0" euler="1.57 0 0"/>
+  <geom type="box" size="0.04 0.04 0.005" group="3" solref="0.001 2" solimp="0.998 0.998 0.001" euler="1.57 0 0"/>
+</worldbody>
+</mujoco>

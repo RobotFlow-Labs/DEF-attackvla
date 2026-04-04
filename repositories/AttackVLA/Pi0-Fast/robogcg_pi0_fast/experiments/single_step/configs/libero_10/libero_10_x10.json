@@ -1,0 +1,12 @@
+{
+    "model_name": "openvla/openvla-7b-finetuned-libero-10",
+    "unnorm_key": "libero_10",
+    "seed_frame_path": "images/seed/libero_10_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy_seed.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_10_x10",
+    "max_mag_actions_only": true,
+    "instruction": "pick up the book and place it in the back compartment of the caddy",
+    "as_suffix": true,
+    "optim_str_init": "x x x x x x x x x x",
+    "num_steps": 100
+  } 

@@ -1,0 +1,20 @@
+Traceback (most recent call last):
+  File "/home/eliot/robogcg/experiments/single_step/run_ensemble_transfer.py", line 25, in <module>
+    from experiments.models.OpenVLA.modeling_prismatic import OpenVLAForActionPrediction
+  File "/home/eliot/robogcg/experiments/models/__init__.py", line 7, in <module>
+    from .OpenVLA import (
+  File "/home/eliot/robogcg/experiments/models/OpenVLA/__init__.py", line 2, in <module>
+    from .modeling_prismatic import OpenVLAForActionPrediction
+  File "/home/eliot/robogcg/experiments/models/OpenVLA/modeling_prismatic.py", line 24, in <module>
+    import timm
+ModuleNotFoundError: No module named 'timm'
+Traceback (most recent call last):
+  File "/home/eliot/robogcg/experiments/single_step/run_ensemble_transfer.py", line 25, in <module>
+    from experiments.models.OpenVLA.modeling_prismatic import OpenVLAForActionPrediction
+  File "/home/eliot/robogcg/experiments/models/__init__.py", line 7, in <module>
+    from .OpenVLA import (
+  File "/home/eliot/robogcg/experiments/models/OpenVLA/__init__.py", line 2, in <module>
+    from .modeling_prismatic import OpenVLAForActionPrediction
+  File "/home/eliot/robogcg/experiments/models/OpenVLA/modeling_prismatic.py", line 24, in <module>
+    import timm
+ModuleNotFoundError: No module named 'timm'

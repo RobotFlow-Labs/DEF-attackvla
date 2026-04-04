@@ -1,0 +1,8 @@
+{
+    "model_name": "furonghuang-lab/tracevla_7b",
+    "unnorm_key": "fractal20220817_data",
+    "seed_frame_path": "images/simpler/pick_coke_can/10.png",
+    "output_dir": "outputs",
+    "experiment_name": "single_step_tracevla_0",
+    "use_trace": true
+  }
