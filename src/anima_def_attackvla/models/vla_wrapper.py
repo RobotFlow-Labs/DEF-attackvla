@@ -11,8 +11,6 @@ from pathlib import Path
 from typing import Optional
 
 import torch
-import torch.nn as nn
-from PIL import Image
 
 MODEL_REGISTRY = {
     "openvla-7b": "/mnt/forge-data/models/openvla--openvla-7b/",

@@ -21,7 +21,7 @@ import torch.nn.functional as F
 
 @dataclass
 class DefenseOutput:
-    is_adversarial: torch.Tensor  # (B,) float probability
+    is_adversarial: torch.Tensor  # (B,) logits — apply sigmoid for probability
     sanitized_image: torch.Tensor  # (B, C, H, W) smoothed image
     tv_anomaly_score: torch.Tensor  # (B,) TV anomaly score
     patch_mask: Optional[torch.Tensor] = None  # (B, 1, H, W) suspected patch regions
@@ -42,14 +42,14 @@ class PatchDetectorHead(nn.Module):
         h = F.relu(self.conv1(x))
         h = F.relu(self.conv2(h))
         mask = torch.sigmoid(self.conv3(h))
-        score = self.pool(mask).squeeze(-1).squeeze(-1).squeeze(-1)
+        score = self.pool(mask).view(x.size(0))
         return score, mask
 
 
 class ImageAnomalyClassifier(nn.Module):
     """Binary classifier: clean vs adversarial image."""
 
-    def __init__(self, in_channels: int = 3, img_size: int = 224) -> None:
+    def __init__(self, in_channels: int = 3) -> None:
         super().__init__()
         self.features = nn.Sequential(
             nn.Conv2d(in_channels, 32, 7, stride=4, padding=3),
@@ -79,7 +79,7 @@ class DefenseNet(nn.Module):
 
     Parameters:
         in_channels: Image channels (default 3 for RGB).
-        img_size: Expected image size (default 224).
+        img_size: Expected image size (default 224, stored for reference).
         sigma: Gaussian noise sigma for randomized smoothing.
         n_smooth_samples: Number of smoothed copies for majority vote inference.
     """
@@ -97,7 +97,7 @@ class DefenseNet(nn.Module):
         self.img_size = img_size
 
         self.patch_detector = PatchDetectorHead(in_channels)
-        self.anomaly_classifier = ImageAnomalyClassifier(in_channels, img_size)
+        self.anomaly_classifier = ImageAnomalyClassifier(in_channels)
 
     def smooth(self, image: torch.Tensor) -> torch.Tensor:
         """Apply randomized smoothing: add Gaussian noise + clamp."""
@@ -119,7 +119,12 @@ class DefenseNet(nn.Module):
         """
         tv_score, patch_mask = self.patch_detector(image)
         adv_logits = self.anomaly_classifier(image)
-        sanitized = self.smooth(image)
+
+        # Skip smoothing during training — it's unused by the loss
+        if self.training:
+            sanitized = image
+        else:
+            sanitized = self.smooth(image)
 
         return DefenseOutput(
             is_adversarial=adv_logits,
@@ -141,8 +146,6 @@ class DefenseNet(nn.Module):
         is_blocked = adv_prob > threshold
         return is_blocked, adv_prob, out.sanitized_image
 
-    @staticmethod
-    def param_count() -> str:
-        m = DefenseNet()
-        n = sum(p.numel() for p in m.parameters())
-        return f"{n/1e6:.2f}M"
+    def param_count(self) -> str:
+        n = sum(p.numel() for p in self.parameters())
+        return f"{n / 1e6:.2f}M"

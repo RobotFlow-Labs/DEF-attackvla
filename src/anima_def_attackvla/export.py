@@ -96,11 +96,12 @@ def export_trt(onnx_path: Path, out_dir: Path) -> tuple[Path, Path]:
         else:
             print(f"  [TRT] toolkit error: {result.stderr[:200]}")
 
-    # Fallback: try trtexec directly
+    # Fallback: try trtexec directly (no shell=True to avoid injection)
     for prec, flag, path in [("fp16", "--fp16", fp16_path), ("fp32", "", fp32_path)]:
-        trtexec = "trtexec"
-        cmd = f"{trtexec} --onnx={onnx_path} --saveEngine={path} {flag} --workspace=1024"
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        cmd = ["trtexec", f"--onnx={onnx_path}", f"--saveEngine={path}", "--workspace=1024"]
+        if flag:
+            cmd.append(flag)
+        result = subprocess.run(cmd, capture_output=True, text=True)
         if result.returncode == 0:
             print(f"  [TRT-{prec.upper()}] {path}")
         else:
@@ -119,7 +120,7 @@ def run_export(
     out_dir.mkdir(parents=True, exist_ok=True)
 
     model = DefenseNet()
-    ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=False)
+    ckpt = torch.load(checkpoint_path, map_location="cpu", weights_only=True)
     model.load_state_dict(ckpt["model"])
     model.eval()
 

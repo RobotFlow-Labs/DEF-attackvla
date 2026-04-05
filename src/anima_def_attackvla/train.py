@@ -10,7 +10,6 @@ import json
 import math
 import shutil
 import time
-from dataclasses import asdict
 from pathlib import Path
 
 import tomllib
@@ -60,8 +59,12 @@ class CheckpointManager:
     def save(self, state: dict, metric_value: float, step: int) -> Path:
         path = self.save_dir / f"checkpoint_step{step:06d}.pth"
         torch.save(state, path)
+
+        # Deduplicate: remove existing entry for same path
+        self.history = [(v, p) for v, p in self.history if p != path]
         self.history.append((metric_value, path))
         self.history.sort(key=lambda x: x[0], reverse=(self.mode == "max"))
+
         while len(self.history) > self.keep_top_k:
             _, old_path = self.history.pop()
             old_path.unlink(missing_ok=True)
@@ -114,6 +117,7 @@ def load_training_config(path: str) -> dict:
         "steps_per_epoch": 100,
         "sigma": 0.05,
         "img_size": 224,
+        "tv_loss_weight": 0.5,
     }
     merged = {**defaults, **raw.get("training", {})}
     return merged
@@ -149,13 +153,15 @@ def train(config_path: str, gpu_id: int = 0, resume: str | None = None, max_step
     ckpt_dir = Path("/mnt/artifacts-datai/checkpoints/DEF-attackvla")
     ckpt_mgr = CheckpointManager(ckpt_dir, keep_top_k=cfg["keep_top_k"], mode="min")
     early_stop = EarlyStopping(cfg["early_stopping_patience"], cfg["early_stopping_delta"])
-    criterion = nn.BCEWithLogitsLoss()
+    cls_criterion = nn.BCEWithLogitsLoss()
+    tv_criterion = nn.MSELoss()
+    tv_weight = float(cfg["tv_loss_weight"])
 
     start_epoch = 0
     global_step = 0
 
     if resume:
-        ckpt = torch.load(resume, map_location=device, weights_only=False)
+        ckpt = torch.load(resume, map_location=device, weights_only=True)
         model.load_state_dict(ckpt["model"])
         optimizer.load_state_dict(ckpt["optimizer"])
         scheduler.load_state_dict(ckpt["scheduler"])
@@ -196,7 +202,15 @@ def train(config_path: str, gpu_id: int = 0, resume: str | None = None, max_step
             if use_amp:
                 with torch.amp.autocast("cuda"):
                     out = model(images)
-                    loss = criterion(out.is_adversarial, labels)
+                    cls_loss = cls_criterion(out.is_adversarial, labels)
+                    tv_loss = tv_criterion(out.tv_anomaly_score, labels)
+                    loss = cls_loss + tv_weight * tv_loss
+
+                if torch.isnan(loss):
+                    print("[FATAL] Loss is NaN — stopping training")
+                    print("[FIX] Reduce lr by 10x, check data")
+                    return
+
                 scaler.scale(loss).backward()
                 scaler.unscale_(optimizer)
                 torch.nn.utils.clip_grad_norm_(model.parameters(), cfg["max_grad_norm"])
@@ -204,18 +218,21 @@ def train(config_path: str, gpu_id: int = 0, resume: str | None = None, max_step
                 scaler.update()
             else:
                 out = model(images)
-                loss = criterion(out.is_adversarial, labels)
+                cls_loss = cls_criterion(out.is_adversarial, labels)
+                tv_loss = tv_criterion(out.tv_anomaly_score, labels)
+                loss = cls_loss + tv_weight * tv_loss
+
+                if torch.isnan(loss):
+                    print("[FATAL] Loss is NaN — stopping training")
+                    print("[FIX] Reduce lr by 10x, check data")
+                    return
+
                 loss.backward()
                 torch.nn.utils.clip_grad_norm_(model.parameters(), cfg["max_grad_norm"])
                 optimizer.step()
 
             scheduler.step()
             global_step += 1
-
-            if torch.isnan(loss):
-                print("[FATAL] Loss is NaN — stopping training")
-                print("[FIX] Reduce lr by 10x, check data")
-                return
 
             preds = (torch.sigmoid(out.is_adversarial) > 0.5).float()
             epoch_correct += (preds == labels).sum().item()

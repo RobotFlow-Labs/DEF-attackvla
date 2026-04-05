@@ -44,7 +44,8 @@ def test_defense_net_output_range():
 
 
 def test_defense_net_param_count():
-    result = DefenseNet.param_count()
+    model = DefenseNet(img_size=64)
+    result = model.param_count()
     assert "M" in result
     assert float(result.replace("M", "")) > 0
 

@@ -115,7 +115,7 @@ def run_full_evaluation(
 ) -> DefenseReport:
     """Run evaluation across all attack types."""
     model = DefenseNet()
-    ckpt = torch.load(model_path, map_location=device, weights_only=False)
+    ckpt = torch.load(model_path, map_location=device, weights_only=True)
     model.load_state_dict(ckpt["model"])
     model = model.to(device)
     model.eval()

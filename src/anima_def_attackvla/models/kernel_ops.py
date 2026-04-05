@@ -5,8 +5,11 @@ fused_dual_normalize) with PyTorch fallbacks for CPU/MLX.
 """
 from __future__ import annotations
 
+import logging
 import torch
 from pathlib import Path
+
+logger = logging.getLogger(__name__)
 
 
 def _load_cuda_kernels():
@@ -34,8 +37,8 @@ class CUDADefenseOps:
         if torch.cuda.is_available():
             try:
                 self._cuda_mod = _load_cuda_kernels()
-            except Exception:
-                pass
+            except Exception as e:
+                logger.warning("Failed to load CUDA kernels, using CPU fallback: %s", e)
 
     @property
     def has_cuda(self) -> bool:
@@ -51,7 +54,8 @@ class CUDADefenseOps:
     ) -> torch.Tensor:
         if self.has_cuda and x.is_cuda:
             return self._cuda_mod.fused_smooth_clamp(x, sigma, lo, hi, seed)
-        noise = torch.randn_like(x) * sigma
+        gen = torch.Generator(device=x.device).manual_seed(seed) if seed else None
+        noise = torch.randn(x.shape, generator=gen, device=x.device, dtype=x.dtype) * sigma
         return (x + noise).clamp(lo, hi)
 
     def local_tv_map(self, image: torch.Tensor) -> torch.Tensor:
