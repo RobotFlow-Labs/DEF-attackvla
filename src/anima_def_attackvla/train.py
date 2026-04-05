@@ -149,7 +149,7 @@ def train(config_path: str, gpu_id: int = 0, resume: str | None = None, max_step
     ckpt_dir = Path("/mnt/artifacts-datai/checkpoints/DEF-attackvla")
     ckpt_mgr = CheckpointManager(ckpt_dir, keep_top_k=cfg["keep_top_k"], mode="min")
     early_stop = EarlyStopping(cfg["early_stopping_patience"], cfg["early_stopping_delta"])
-    criterion = nn.BCELoss()
+    criterion = nn.BCEWithLogitsLoss()
 
     start_epoch = 0
     global_step = 0
@@ -217,7 +217,7 @@ def train(config_path: str, gpu_id: int = 0, resume: str | None = None, max_step
                 print("[FIX] Reduce lr by 10x, check data")
                 return
 
-            preds = (out.is_adversarial > 0.5).float()
+            preds = (torch.sigmoid(out.is_adversarial) > 0.5).float()
             epoch_correct += (preds == labels).sum().item()
             epoch_total += labels.shape[0]
             epoch_loss += loss.item()

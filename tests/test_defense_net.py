@@ -37,8 +37,8 @@ def test_defense_net_output_range():
     model = DefenseNet(img_size=64)
     x = torch.rand(4, 3, 64, 64)
     out = model(x)
-    assert (out.is_adversarial >= 0).all()
-    assert (out.is_adversarial <= 1).all()
+    # is_adversarial is logits (unbounded), sanitized is clamped [0,1]
+    assert out.is_adversarial.shape == (4,)
     assert (out.sanitized_image >= 0).all()
     assert (out.sanitized_image <= 1).all()
 

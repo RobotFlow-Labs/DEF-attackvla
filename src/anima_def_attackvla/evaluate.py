@@ -77,16 +77,18 @@ def evaluate_attack_type(
             out_attack = model(attacked)
             total_time += time.time() - t0
 
-            pred_clean = (out_clean.is_adversarial > threshold).float()
-            pred_attack = (out_attack.is_adversarial > threshold).float()
+            prob_clean = torch.sigmoid(out_clean.is_adversarial)
+            prob_attack = torch.sigmoid(out_attack.is_adversarial)
+            pred_clean = (prob_clean > threshold).float()
+            pred_attack = (prob_attack > threshold).float()
 
             tn += (pred_clean == 0).sum().item()
             fp += (pred_clean == 1).sum().item()
             tp += (pred_attack == 1).sum().item()
             fn += (pred_attack == 0).sum().item()
 
-            adv_scores_clean.append(out_clean.is_adversarial.mean().item())
-            adv_scores_attack.append(out_attack.is_adversarial.mean().item())
+            adv_scores_clean.append(prob_clean.mean().item())
+            adv_scores_attack.append(prob_attack.mean().item())
 
     total = tp + fp + tn + fn
     n_samples = n_batches * batch_size * 2

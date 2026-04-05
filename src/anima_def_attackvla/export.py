@@ -65,47 +65,49 @@ def export_onnx(model: DefenseNet, out_dir: Path, img_size: int = 224) -> Path:
         input_names=["image"],
         output_names=["adversarial_score"],
         dynamic_axes={"image": {0: "batch"}, "adversarial_score": {0: "batch"}},
-        opset_version=17,
+        opset_version=18,
     )
     print(f"  [ONNX] {path} ({path.stat().st_size / 1e6:.1f}MB)")
     return path
 
 
-def export_trt(onnx_path: Path, out_dir: Path, precision: str = "fp16") -> Path:
-    """Convert ONNX to TensorRT engine using shared toolkit."""
+def export_trt(onnx_path: Path, out_dir: Path) -> tuple[Path, Path]:
+    """Convert ONNX to TensorRT FP16 + FP32 using shared toolkit."""
     trt_toolkit = Path("/mnt/forge-data/shared_infra/trt_toolkit/export_to_trt.py")
-    suffix = f"_{precision}"
-    out_path = out_dir / f"defense_net{suffix}.engine"
+    fp16_path = out_dir / "defense_net_fp16.trt"
+    fp32_path = out_dir / "defense_net_fp32.trt"
 
     if trt_toolkit.exists():
         cmd = [
             "python3", str(trt_toolkit),
             "--onnx", str(onnx_path),
-            "--output", str(out_path),
-            "--precision", precision,
+            "--output-dir", str(out_dir),
         ]
-        result = subprocess.run(cmd, capture_output=True, text=True)
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
         if result.returncode == 0:
-            print(f"  [TRT-{precision.upper()}] {out_path}")
-            return out_path
+            # Toolkit produces files in output-dir; find them
+            for f in out_dir.glob("*.trt"):
+                if "fp16" in f.name:
+                    fp16_path = f
+                elif "fp32" in f.name:
+                    fp32_path = f
+            print(f"  [TRT] FP16={fp16_path.name}, FP32={fp32_path.name}")
+            return fp16_path, fp32_path
         else:
-            print(f"  [TRT-{precision.upper()}] toolkit failed: {result.stderr[:200]}")
+            print(f"  [TRT] toolkit error: {result.stderr[:200]}")
 
     # Fallback: try trtexec directly
-    trtexec = "/usr/local/bin/trtexec"
-    if not Path(trtexec).exists():
+    for prec, flag, path in [("fp16", "--fp16", fp16_path), ("fp32", "", fp32_path)]:
         trtexec = "trtexec"
+        cmd = f"{trtexec} --onnx={onnx_path} --saveEngine={path} {flag} --workspace=1024"
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        if result.returncode == 0:
+            print(f"  [TRT-{prec.upper()}] {path}")
+        else:
+            print(f"  [TRT-{prec.upper()}] SKIPPED (trtexec not available)")
+            path.write_text(f"# TRT {prec} export pending — trtexec not installed\n")
 
-    flag = "--fp16" if precision == "fp16" else ""
-    cmd = f"{trtexec} --onnx={onnx_path} --saveEngine={out_path} {flag} --workspace=1024"
-    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-    if result.returncode == 0:
-        print(f"  [TRT-{precision.upper()}] {out_path}")
-    else:
-        print(f"  [TRT-{precision.upper()}] SKIPPED (trtexec not available)")
-        # Write placeholder so manifest is complete
-        out_path.write_text(f"# TRT {precision} export pending — trtexec not installed\n")
-    return out_path
+    return fp16_path, fp32_path
 
 
 def run_export(
@@ -128,8 +130,7 @@ def run_export(
     pth_path = export_pth(model, out_dir)
     st_path = export_safetensors(model, out_dir)
     onnx_path = export_onnx(model, out_dir)
-    trt_fp16 = export_trt(onnx_path, out_dir, "fp16")
-    trt_fp32 = export_trt(onnx_path, out_dir, "fp32")
+    trt_fp16, trt_fp32 = export_trt(onnx_path, out_dir)
 
     manifest = ExportManifest(
         model_family="attackvla-defense",

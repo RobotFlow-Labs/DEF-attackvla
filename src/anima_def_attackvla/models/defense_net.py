@@ -69,9 +69,9 @@ class ImageAnomalyClassifier(nn.Module):
         )
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """Returns adversarial probability (B,)."""
+        """Returns adversarial logits (B,). Apply sigmoid for probability."""
         h = self.features(x)
-        return torch.sigmoid(self.classifier(h)).squeeze(-1)
+        return self.classifier(h).squeeze(-1)
 
 
 class DefenseNet(nn.Module):
@@ -114,14 +114,15 @@ class DefenseNet(nn.Module):
             return_mask: Whether to return the patch mask.
 
         Returns:
-            DefenseOutput with adversarial scores and sanitized images.
+            DefenseOutput with adversarial logits and sanitized images.
+            Use .is_adversarial with sigmoid for probabilities at inference.
         """
         tv_score, patch_mask = self.patch_detector(image)
-        adv_prob = self.anomaly_classifier(image)
+        adv_logits = self.anomaly_classifier(image)
         sanitized = self.smooth(image)
 
         return DefenseOutput(
-            is_adversarial=adv_prob,
+            is_adversarial=adv_logits,
             sanitized_image=sanitized,
             tv_anomaly_score=tv_score,
             patch_mask=patch_mask if return_mask else None,
@@ -133,11 +134,12 @@ class DefenseNet(nn.Module):
         """Convenience method for inference: detect + sanitize.
 
         Returns:
-            (is_blocked (B,) bool, adv_score (B,) float, sanitized (B,C,H,W))
+            (is_blocked (B,) bool, adv_score (B,) float probability, sanitized (B,C,H,W))
         """
         out = self.forward(image)
-        is_blocked = out.is_adversarial > threshold
-        return is_blocked, out.is_adversarial, out.sanitized_image
+        adv_prob = torch.sigmoid(out.is_adversarial)
+        is_blocked = adv_prob > threshold
+        return is_blocked, adv_prob, out.sanitized_image
 
     @staticmethod
     def param_count() -> str:
