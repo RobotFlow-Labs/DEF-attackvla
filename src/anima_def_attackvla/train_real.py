@@ -113,7 +113,9 @@ def load_training_config(path: str) -> dict:
         "img_size": 224,
         "tv_loss_weight": 0.5,
         "num_workers": 4,
-        "image_dir": "/mnt/forge-data/datasets/coco/val2017",
+        "image_dir": "/mnt/forge-data/datasets/lerobot--libero/extracted_frames/observation.images.image",
+        "max_frames": 0,
+        "task_suite": "",
     }
     merged = {**defaults, **raw.get("training", {})}
     return merged
@@ -148,12 +150,16 @@ def train(config_path: str, gpu_id: int = 0, resume: str | None = None, max_step
     print(f"[GPU] {device}")
     print(f"[DATA] {cfg['image_dir']}")
 
+    task_suite = cfg.get("task_suite", "") or None
+    max_frames = int(cfg.get("max_frames", 0))
     train_loader, val_loader = get_dataloaders(
-        image_dir=cfg["image_dir"],
+        frames_dir=cfg["image_dir"],
         img_size=cfg["img_size"],
         batch_size=cfg["batch_size"],
         attack_ratio=cfg["attack_ratio"],
         num_workers=cfg["num_workers"],
+        task_suite=task_suite,
+        max_frames=max_frames,
     )
     print(f"[DATA] train={len(train_loader.dataset)} val={len(val_loader.dataset)} images")
     print(f"[TRAIN] epochs={cfg['epochs']}, lr={cfg['learning_rate']}, bs={cfg['batch_size']}")

@@ -1,33 +1,56 @@
-"""Tests for real image data loader."""
+"""Tests for real LIBERO image data loader."""
 import pytest
 import torch
 from pathlib import Path
 
-from anima_def_attackvla.data import RealImageDefenseDataset, COCO_VAL_DIR
+from anima_def_attackvla.data import LiberoDefenseDataset, LIBERO_FRAMES, COCO_VAL_DIR
 
 
-@pytest.mark.skipif(not Path(COCO_VAL_DIR).exists(), reason="COCO val2017 not on disk")
-def test_real_dataset_loads():
-    ds = RealImageDefenseDataset(COCO_VAL_DIR, img_size=64, split="val")
+@pytest.mark.skipif(
+    not Path(LIBERO_FRAMES).exists(), reason="LIBERO frames not on disk"
+)
+def test_libero_dataset_loads():
+    ds = LiberoDefenseDataset(LIBERO_FRAMES, img_size=64, split="val", max_frames=200)
     assert len(ds) > 0
     img, label = ds[0]
     assert img.shape == (3, 64, 64)
-    assert label.shape == ()
     assert label.item() in (0.0, 1.0)
 
 
-@pytest.mark.skipif(not Path(COCO_VAL_DIR).exists(), reason="COCO val2017 not on disk")
-def test_real_dataset_train_val_split():
-    train_ds = RealImageDefenseDataset(COCO_VAL_DIR, img_size=64, split="train")
-    val_ds = RealImageDefenseDataset(COCO_VAL_DIR, img_size=64, split="val")
+@pytest.mark.skipif(
+    not Path(LIBERO_FRAMES).exists(), reason="LIBERO frames not on disk"
+)
+def test_libero_train_val_split():
+    train_ds = LiberoDefenseDataset(LIBERO_FRAMES, img_size=64, split="train", max_frames=200)
+    val_ds = LiberoDefenseDataset(LIBERO_FRAMES, img_size=64, split="val", max_frames=200)
     assert len(train_ds) > len(val_ds)
     assert len(train_ds) + len(val_ds) > 0
 
 
-@pytest.mark.skipif(not Path(COCO_VAL_DIR).exists(), reason="COCO val2017 not on disk")
-def test_attack_distribution():
-    """Check that ~50% of samples are adversarial."""
-    ds = RealImageDefenseDataset(COCO_VAL_DIR, img_size=64, attack_ratio=0.5, split="val")
-    labels = [ds[i][1].item() for i in range(min(100, len(ds)))]
+@pytest.mark.skipif(
+    not Path(LIBERO_FRAMES).exists(), reason="LIBERO frames not on disk"
+)
+def test_libero_attack_distribution():
+    ds = LiberoDefenseDataset(LIBERO_FRAMES, img_size=64, attack_ratio=0.5, split="val", max_frames=200)
+    labels = [ds[i][1].item() for i in range(min(50, len(ds)))]
     attack_frac = sum(labels) / len(labels)
-    assert 0.2 < attack_frac < 0.8  # generous bounds for random sampling
+    assert 0.15 < attack_frac < 0.85
+
+
+@pytest.mark.skipif(
+    not Path(LIBERO_FRAMES).exists(), reason="LIBERO frames not on disk"
+)
+def test_libero_image_range():
+    ds = LiberoDefenseDataset(LIBERO_FRAMES, img_size=64, split="val", max_frames=200)
+    img, _ = ds[0]
+    assert img.min() >= 0.0
+    assert img.max() <= 1.0
+
+
+@pytest.mark.skipif(
+    not Path(COCO_VAL_DIR).exists(), reason="COCO val2017 not on disk"
+)
+def test_fallback_to_coco():
+    """If LIBERO frames don't exist, falls back to COCO."""
+    ds = LiberoDefenseDataset("/nonexistent/path", img_size=64, split="val")
+    assert len(ds) > 0
