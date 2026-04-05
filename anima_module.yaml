@@ -1,19 +1,40 @@
 name: DEF-attackvla
-version: 0.1.0
+version: 0.2.0
 kind: defense
 wave: 8
 paper:
-  title: AttackVLA: Benchmarking Adversarial and Backdoor Attacks on Vision-Language-Action Models
+  title: "AttackVLA: Benchmarking Adversarial and Backdoor Attacks on Vision-Language-Action Models"
   arxiv: "2511.12149"
+  repo: "https://github.com/lijayuTnT/AttackVLA"
+capabilities:
+  - adversarial_patch_detection
+  - randomized_smoothing
+  - textual_safeguard
+  - multimodal_guard
 runtime:
   python: "3.11"
   backends: ["mlx", "cuda"]
-  default_backend: "mlx"
+  default_backend: "cuda"
+models:
+  defense_net:
+    params: "0.63M"
+    input: "image (B, 3, 224, 224)"
+    output: "adversarial_score (B,), sanitized_image (B, 3, 224, 224)"
+  supported_vlas:
+    - openvla-7b
+    - pi0fast-base
+    - pi05-base
+    - smolvla-base
 api:
   health: /health
   ready: /ready
+  info: /info
   predict: /predict
-io:
+docker:
+  image: "anima-def-attackvla:0.2.0"
+  port: 8080
+  gpu: true
+ros2:
   input_topics:
     - /anima/def_attackvla/command
   output_topics:

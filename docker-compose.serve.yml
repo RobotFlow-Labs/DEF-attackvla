@@ -4,7 +4,32 @@ services:
       context: .
       dockerfile: Dockerfile.serve
     environment:
-      ANIMA_BACKEND: ${ANIMA_BACKEND:-mlx}
+      - ANIMA_BACKEND=${ANIMA_BACKEND:-cuda}
+      - ANIMA_MODULE_NAME=DEF-attackvla
+      - ANIMA_MODULE_VERSION=0.2.0
+      - ANIMA_SERVE_PORT=8080
+      - ANIMA_DEVICE=auto
+      - ANIMA_WEIGHT_PATH=/data/weights/best.pth
+    volumes:
+      - /mnt/artifacts-datai/checkpoints/DEF-attackvla:/data/weights:ro
     ports:
       - "8080:8080"
+    network_mode: host
     restart: unless-stopped
+    profiles: ["serve", "api"]
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  test:
+    build:
+      context: .
+      dockerfile: Dockerfile.serve
+    command: ["python", "-m", "pytest", "tests/", "-x", "-v"]
+    volumes:
+      - ./tests:/app/tests:ro
+    profiles: ["test"]

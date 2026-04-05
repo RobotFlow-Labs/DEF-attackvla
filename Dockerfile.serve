@@ -1,15 +1,33 @@
-FROM python:3.11-slim
+# Layer 3: DEF-attackvla defense guard
+# Base: anima-serve (includes FastAPI, health endpoints, weight downloader)
+# Fallback: python:3.11-slim if anima-serve not available
+ARG BASE_IMAGE=python:3.11-slim
+FROM ${BASE_IMAGE}
 
 WORKDIR /app
 
+# Install uv for fast package management
 RUN pip install --no-cache-dir uv
 
+# Copy project files
 COPY pyproject.toml README.md ./
 COPY src ./src
 COPY configs ./configs
+COPY kernels ./kernels
 
-RUN uv pip install --system .
+# Install dependencies + project
+RUN uv pip install --system . && \
+    uv pip install --system torch --index-url https://download.pytorch.org/whl/cu128 || true
+
+# Environment
+ENV ANIMA_MODULE_NAME=DEF-attackvla
+ENV ANIMA_MODULE_VERSION=0.2.0
+ENV ANIMA_SERVE_PORT=8080
+ENV ANIMA_DEVICE=auto
 
 EXPOSE 8080
+
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8080/health')" || exit 1
 
 CMD ["uvicorn", "anima_def_attackvla.serve:app", "--host", "0.0.0.0", "--port", "8080"]
