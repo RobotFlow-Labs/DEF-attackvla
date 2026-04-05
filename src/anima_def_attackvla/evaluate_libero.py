@@ -24,6 +24,7 @@ import torch
 from torch.utils.data import DataLoader
 
 from anima_def_attackvla.models.defense_net import DefenseNet
+from anima_def_attackvla.models.vla_wrapper import list_available_models, get_vla_info
 from anima_def_attackvla.data import LiberoDefenseDataset, LIBERO_FRAMES, TASK_SUITES
 
 
@@ -155,6 +156,13 @@ def run_full_libero_eval(
     model = model.to(device).eval()
     n_params = sum(p.numel() for p in model.parameters())
 
+    # Report available VLA models this defense protects
+    available_vlas = list_available_models()
+    print(f"[VLA MODELS] Defense guard protects {len(available_vlas)} VLA models:")
+    for vla_name in available_vlas:
+        info = get_vla_info(vla_name)
+        print(f"  {vla_name}: {info.model_type} ({info.param_count / 1e9:.1f}B params)")
+
     all_results = []
     suites = list(TASK_SUITES.keys())
 
@@ -212,12 +220,21 @@ def main():
 
     out_path = args.output or "/mnt/artifacts-datai/reports/DEF-attackvla/libero_eval_report.json"
     Path(out_path).parent.mkdir(parents=True, exist_ok=True)
+    vla_models = []
+    for vla_name in list_available_models():
+        info = get_vla_info(vla_name)
+        vla_models.append({
+            "name": info.name, "type": info.model_type,
+            "params": info.param_count, "path": info.path,
+        })
+
     with open(out_path, "w") as f:
         json.dump({
             "model_path": report.model_path,
             "dataset": report.dataset,
             "n_params": report.n_params,
             "suites": report.suites,
+            "protected_vla_models": vla_models,
             "overall_accuracy": report.overall_accuracy,
             "overall_tpr": report.overall_tpr,
             "overall_fpr": report.overall_fpr,

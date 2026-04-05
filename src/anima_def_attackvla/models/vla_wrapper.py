@@ -17,6 +17,8 @@ MODEL_REGISTRY = {
     "pi0fast-base": "/mnt/forge-data/models/lerobot--pi0fast-base/",
     "pi05-base": "/mnt/forge-data/models/lerobot--pi05_base/",
     "smolvla-base": "/mnt/forge-data/models/lerobot--smolvla_base/",
+    "bitvla": "/mnt/forge-data/models/hongyuw--bitvla-bitsiglipL-224px-bf16/",
+    "xvla-pt": "/mnt/forge-data/models/2toINF--X-VLA-Pt/",
 }
 
 
@@ -38,14 +40,16 @@ def get_vla_info(name: str) -> VLAInfo:
     if not Path(path).exists():
         raise FileNotFoundError(f"Model not found at {path}")
 
-    if "openvla" in name:
-        return VLAInfo(name, path, "openvla", 7_000_000_000, 224)
-    elif "pi0fast" in name:
-        return VLAInfo(name, path, "pi0_fast", 3_000_000_000, 224)
-    elif "pi05" in name:
-        return VLAInfo(name, path, "pi0", 3_000_000_000, 224)
-    else:
-        return VLAInfo(name, path, "smolvla", 400_000_000, 224)
+    info_map = {
+        "openvla-7b": ("openvla", 7_000_000_000, 224),
+        "pi0fast-base": ("pi0_fast", 3_000_000_000, 224),
+        "pi05-base": ("pi0", 3_000_000_000, 224),
+        "smolvla-base": ("smolvla", 400_000_000, 224),
+        "bitvla": ("bitvla_llava", 3_000_000_000, 224),
+        "xvla-pt": ("xvla", 1_500_000_000, 224),
+    }
+    model_type, param_count, img_size = info_map.get(name, ("unknown", 0, 224))
+    return VLAInfo(name, path, model_type, param_count, img_size)
 
 
 def list_available_models() -> list[str]:

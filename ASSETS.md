@@ -24,6 +24,8 @@
 | Pi0-Fast | lerobot/pi0fast-base | /mnt/forge-data/models/lerobot--pi0fast-base/ | 11GB | READY |
 | Pi0.5 | lerobot/pi05_base | /mnt/forge-data/models/lerobot--pi05_base/ | 14GB | READY |
 | SmolVLA | lerobot/smolvla_base | /mnt/forge-data/models/lerobot--smolvla_base/ | 873MB | READY |
+| BitVLA | hongyuw/bitvla-bitsiglipL-224px-bf16 | /mnt/forge-data/models/hongyuw--bitvla-bitsiglipL-224px-bf16/ | 5.9GB | READY |
+| X-VLA-Pt | 2toINF/X-VLA-Pt | /mnt/forge-data/models/2toINF--X-VLA-Pt/ | 3.3GB | READY |
 
 ## Datasets
 | Dataset | Scope | Server Path | Size | Status |
@@ -33,6 +35,8 @@
 | LIBERO extracted frames | 273,465 JPEGs (256x256) | .../lerobot--libero/extracted_frames/observation.images.image/ | ~8GB | READY |
 | VIVID++ thermal | thermal imaging dataset | /mnt/train-data/datasets/vivid_plus_plus/ | 47GB | READY |
 | COCO val2017 | 5000 natural images | /mnt/forge-data/datasets/coco/val2017/ | 1.6GB | READY |
+| COCO DINOv2 features | Pre-computed DINOv2 embeddings (5K) | /mnt/forge-data/shared_infra/datasets/coco_dinov2_features/ | 9.9GB | READY |
+| VIVID++ DINOv2 features | Pre-computed thermal DINOv2 | /mnt/forge-data/shared_infra/datasets/vivid_dinov2_features/ | 15MB | READY |
 
 ### LIBERO Task Suites (paper-aligned)
 | Suite | Task IDs | Description |

@@ -27,6 +27,8 @@ LIBERO_DIR = "/mnt/forge-data/datasets/lerobot--libero"
 LIBERO_FRAMES = f"{LIBERO_DIR}/extracted_frames/observation.images.image"
 SMOL_LIBERO_DIR = "/mnt/forge-data/datasets/HuggingFaceVLA--smol-libero"
 COCO_VAL_DIR = "/mnt/forge-data/datasets/coco/val2017"
+COCO_DINOV2_DIR = "/mnt/forge-data/shared_infra/datasets/coco_dinov2_features"
+VIVID_DINOV2_DIR = "/mnt/forge-data/shared_infra/datasets/vivid_dinov2_features"
 
 # AttackVLA paper task suites
 TASK_SUITES = {
@@ -201,6 +203,116 @@ class LiberoDefenseDataset(Dataset):
         return img, label
 
 
+class MultiSourceDefenseDataset(Dataset):
+    """Combines LIBERO robot frames + COCO natural images for diverse defense training.
+
+    This gives the model exposure to both robot manipulation scenes (primary domain)
+    and natural images (domain generalization), making the defense more robust.
+    """
+
+    def __init__(
+        self,
+        img_size: int = 224,
+        attack_ratio: float = 0.5,
+        split: str = "train",
+        max_frames: int = 0,
+        include_coco: bool = True,
+    ) -> None:
+        self.img_size = img_size
+        self.attack_ratio = attack_ratio
+
+        # Collect LIBERO frames
+        libero_paths = _collect_libero_frames(LIBERO_FRAMES, max_frames=max_frames)
+
+        # Collect COCO images
+        coco_paths = []
+        if include_coco and Path(COCO_VAL_DIR).exists():
+            coco_paths = sorted(Path(COCO_VAL_DIR).glob("*.jpg"))
+
+        all_paths = libero_paths + coco_paths
+        if not all_paths:
+            raise FileNotFoundError("No image sources found (LIBERO or COCO)")
+
+        random.Random(42).shuffle(all_paths)
+        n_val = max(1, int(len(all_paths) * 0.1))
+        self.paths = all_paths[n_val:] if split == "train" else all_paths[:n_val]
+
+        self.transform = transforms.Compose([
+            transforms.Resize((img_size, img_size)),
+            transforms.ToTensor(),
+        ])
+
+        # Same attacks as LiberoDefenseDataset
+        self._attacks = [
+            self._apply_upa,
+            self._apply_blue_cube,
+            self._apply_noise,
+            self._apply_checkerboard,
+            self._apply_colored_square,
+        ]
+
+    def __len__(self) -> int:
+        return len(self.paths)
+
+    def _apply_upa(self, img: torch.Tensor) -> torch.Tensor:
+        C, H, W = img.shape
+        ps = random.randint(24, 64)
+        patch = torch.rand(C, ps, ps)
+        x = random.randint(0, max(0, W - ps))
+        y = random.randint(0, max(0, H - ps))
+        result = img.clone()
+        result[:, y : y + ps, x : x + ps] = patch
+        return result
+
+    def _apply_blue_cube(self, img: torch.Tensor) -> torch.Tensor:
+        C, H, W = img.shape
+        cs = random.randint(16, 32)
+        result = img.clone()
+        x, y = W - cs - random.randint(2, 8), H - cs - random.randint(2, 8)
+        x, y = max(0, x), max(0, y)
+        result[0, y : y + cs, x : x + cs] = 0.0
+        result[1, y : y + cs, x : x + cs] = 0.0
+        result[2, y : y + cs, x : x + cs] = 1.0
+        return result
+
+    def _apply_noise(self, img: torch.Tensor) -> torch.Tensor:
+        sigma = random.uniform(0.05, 0.2)
+        return (img + torch.randn_like(img) * sigma).clamp(0.0, 1.0)
+
+    def _apply_checkerboard(self, img: torch.Tensor) -> torch.Tensor:
+        C, H, W = img.shape
+        ps = random.randint(24, 48)
+        ys = torch.arange(ps).unsqueeze(1).expand(ps, ps)
+        xs = torch.arange(ps).unsqueeze(0).expand(ps, ps)
+        checker = ((ys + xs) % 2).float().unsqueeze(0).expand(C, -1, -1)
+        x = random.randint(0, max(0, W - ps))
+        y = random.randint(0, max(0, H - ps))
+        result = img.clone()
+        result[:, y : y + ps, x : x + ps] = checker
+        return result
+
+    def _apply_colored_square(self, img: torch.Tensor) -> torch.Tensor:
+        C, H, W = img.shape
+        cs = random.randint(20, 40)
+        color = torch.rand(C, 1, 1).expand(C, cs, cs)
+        x = random.randint(0, max(0, W - cs))
+        y = random.randint(0, max(0, H - cs))
+        result = img.clone()
+        result[:, y : y + cs, x : x + cs] = color
+        return result
+
+    def __getitem__(self, idx: int) -> tuple[torch.Tensor, torch.Tensor]:
+        img = Image.open(self.paths[idx]).convert("RGB")
+        img = self.transform(img)
+        is_attack = random.random() < self.attack_ratio
+        if is_attack:
+            img = random.choice(self._attacks)(img)
+            label = torch.tensor(1.0)
+        else:
+            label = torch.tensor(0.0)
+        return img, label
+
+
 def get_dataloaders(
     frames_dir: str = LIBERO_FRAMES,
     img_size: int = 224,
@@ -209,14 +321,27 @@ def get_dataloaders(
     num_workers: int = 4,
     task_suite: str | None = None,
     max_frames: int = 0,
+    multi_source: bool = True,
 ) -> tuple[DataLoader, DataLoader]:
-    """Create train and val dataloaders from real LIBERO frames."""
-    train_ds = LiberoDefenseDataset(
-        frames_dir, img_size, attack_ratio, task_suite, "train", max_frames=max_frames
-    )
-    val_ds = LiberoDefenseDataset(
-        frames_dir, img_size, attack_ratio, task_suite, "val", max_frames=max_frames
-    )
+    """Create train and val dataloaders.
+
+    If multi_source=True (default), combines LIBERO + COCO for richer training.
+    Otherwise uses LIBERO-only with optional task suite filtering.
+    """
+    if multi_source:
+        train_ds = MultiSourceDefenseDataset(
+            img_size, attack_ratio, "train", max_frames, include_coco=True,
+        )
+        val_ds = MultiSourceDefenseDataset(
+            img_size, attack_ratio, "val", max_frames, include_coco=True,
+        )
+    else:
+        train_ds = LiberoDefenseDataset(
+            frames_dir, img_size, attack_ratio, task_suite, "train", max_frames=max_frames,
+        )
+        val_ds = LiberoDefenseDataset(
+            frames_dir, img_size, attack_ratio, task_suite, "val", max_frames=max_frames,
+        )
 
     train_loader = DataLoader(
         train_ds, batch_size=batch_size, shuffle=True,
