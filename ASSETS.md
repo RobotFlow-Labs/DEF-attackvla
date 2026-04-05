@@ -18,11 +18,12 @@
 - Inventory snapshot: 11,356 files (`953 .py`, `86 .sh`, `27 .md`)
 
 ## Pretrained Weights
-| Model | Source | Server Path | Mac Path | Status |
+| Model | Source | Server Path | Size | Status |
 |---|---|---|---|---|
-| OpenVLA-7B | HuggingFace OpenVLA ecosystem | /mnt/forge-data/models/def-attackvla/openvla-7b | /Volumes/AIFlowDev/RobotFlowLabs/datasets/models/def-attackvla/openvla-7b | MISSING |
-| SpatialVLA | SpatialVLA release | /mnt/forge-data/models/def-attackvla/spatialvla | /Volumes/AIFlowDev/RobotFlowLabs/datasets/models/def-attackvla/spatialvla | MISSING |
-| pi0-fast / openpi | Physical-Intelligence/openpi | /mnt/forge-data/models/def-attackvla/pi0-fast | /Volumes/AIFlowDev/RobotFlowLabs/datasets/models/def-attackvla/pi0-fast | MISSING |
+| OpenVLA-7B | openvla/openvla-7b | /mnt/forge-data/models/openvla--openvla-7b/ | 15GB | READY |
+| Pi0-Fast | lerobot/pi0fast-base | /mnt/forge-data/models/lerobot--pi0fast-base/ | 11GB | READY |
+| Pi0.5 | lerobot/pi05_base | /mnt/forge-data/models/lerobot--pi05_base/ | 14GB | READY |
+| SmolVLA | lerobot/smolvla_base | /mnt/forge-data/models/lerobot--smolvla_base/ | 873MB | READY |
 
 ## Datasets
 | Dataset | Scope | Source | Server Path | Mac Path | Status |
